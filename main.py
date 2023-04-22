@@ -76,10 +76,10 @@ async def add_book(book: Book):
 
 
 @app.get("/get-book")
-async def get_book(book_id: str):
+async def get_book(book_id: str,ip: str):
     for book in BOOKS:
         if book.book_id == book_id:
-            download_link = f"http://localhost:8888/{book_id}.jpg"
+            download_link = f"http://{ip}/{book_id}.jpg"
             local_file_path = f"images/{book_id}.jpg"
             response = requests.get(download_link)
             with open(local_file_path, "wb") as f:
