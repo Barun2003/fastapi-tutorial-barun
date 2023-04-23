@@ -76,20 +76,14 @@ async def add_book(book: Book):
 
 
 @app.get("/get-book")
-async def get_book(book_id: str,ip: str):
-    for book in BOOKS:
-        if book.book_id == book_id:
-            download_link = f"http://{ip}/{book_id}.jpg"
-            local_file_path = f"images/{book_id}.jpg"
-            response = requests.get(download_link)
-            with open(local_file_path, "wb") as f:
-                f.write(response.content)
-            book.download_url = download_link
-            json_books = jsonable_encoder(BOOKS)
-            with open(BOOKS_FILE, "w") as f:
-                json.dump(json_books, f)
-            return book
-    return {"error": "Book not found"}
+async def get_book(book_id: str):
+    images_dir = os.path.join(os.getcwd(), "images")
+    image_file_path = os.path.join(images_dir, f"{book_id}.jpg")
+
+    if os.path.exists(image_file_path):
+        return FileResponse(image_file_path)
+    else:
+        return {"error": "Book not found"}
 
 
 @app.get("/get-books")
